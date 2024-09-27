@@ -1,0 +1,20 @@
+Running suite(s): Default
+40%: Checks: 30, Failures: 13, Errors: 5
+public.c:46:F:Public:C_void_func:0: Assertion 'valid_program("def void foo() { }")' failed
+public.c:47:F:Public:C_assign:0: Assertion 'valid_program("def int main () { " "int a; a = 5;" " }")' failed
+public.c:48:F:Public:C_break:0: Assertion 'valid_program("def int main () { " "break;" " }")' failed
+public.c:49:F:Public:C_continue:0: Assertion 'valid_program("def int main () { " "continue;" " }")' failed
+public.c:50:F:Public:C_return:0: Assertion 'valid_program("def int main () { " "return;" " }")' failed
+public.c:51:F:Public:C_return_val:0: Assertion 'valid_program("def int main () { " "return 0;" " }")' failed
+public.c:78:E:Public:C_declit:0: (after this point) Received signal 11 (Segmentation fault)
+public.c:79:E:Public:C_hexlit:0: (after this point) Received signal 11 (Segmentation fault)
+public.c:80:E:Public:C_strlit:0: (after this point) Received signal 11 (Segmentation fault)
+public.c:52:F:Public:B_param_func:0: Assertion 'valid_program("def int foo(int a, bool b) { }")' failed
+public.c:53:F:Public:B_conditional:0: Assertion 'valid_program("def int main () { " "if (true) { }" " }")' failed
+public.c:54:F:Public:B_whileloop:0: Assertion 'valid_program("def int main () { " "while (false) { }" " }")' failed
+public.c:55:F:Public:B_add_expr:0: Assertion 'valid_program("def int main () { return " "3+7" " ; }")' failed
+public.c:56:F:Public:B_add_expr_bool:0: Assertion 'valid_program("def int main () { return " "true && false" " ; }")' failed
+public.c:57:F:Public:B_neg_expr:0: Assertion 'valid_program("def int main () { return " "-2" " ; }")' failed
+public.c:58:F:Public:A_arrays:0: Assertion 'valid_program("int a[5]; def int main() { a[1] = 7; return a[1]; }")' failed
+public.c:81:E:Public:A_newline:0: (after this point) Received signal 11 (Segmentation fault)
+private.c:5:E:Private:A_null_token_queue:0: (after this point) Received signal 11 (Segmentation fault)
