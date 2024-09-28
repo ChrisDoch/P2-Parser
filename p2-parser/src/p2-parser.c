@@ -178,7 +178,7 @@ ASTNode* parse_block(TokenQueue* input)
   if (check_next_token(input, SYM, "}")) { // checks for empty block
     return val;
   }
-  while (check_next_token_type(input, KEY)) {
+  while (check_next_token_type(input, KEY)) { // NEEDS CHANGING to account for Decaftypes specifically, not keys
     NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   val = BlockNode_new(vars, stmts, line);
@@ -196,14 +196,14 @@ ASTNode* parse_funcdecl(TokenQueue* input)
   DecafType t = parse_type(input); // return type
   char* FUNCNAME[MAX_TOKEN_LEN];
   parse_id(input, FUNCNAME);
-  match_and_discard_next_token(input, SYM, "(");
-  if (!check_next_token(input, SYM, ")")) {
+  match_and_discard_next_token(input, SYM, "("); // start of params
+  if (!check_next_token(input, SYM, ")")) { // check if not empty
     while (!check_next_token(input, SYM, ")")) {
         DecafType paramt = parse_type(input);
         char* NAME[MAX_TOKEN_LEN];
         parse_id(input, NAME);
         ParameterList_add_new(params, NAME, paramt);
-        if (!check_next_token(input, SYM, ")")) {
+        if (!check_next_token(input, SYM, ")")) { // check if not last param
             match_and_discard_next_token(input, SYM, ",");
         }
     }
