@@ -1,40 +1,40 @@
-==947002== Memcheck, a memory error detector
-==947002== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==947002== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
-==947002== Command: ../decaf inputs/add.decaf
-==947002== 
+==1008959== Memcheck, a memory error detector
+==1008959== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1008959== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==1008959== Command: ../decaf inputs/add.decaf
+==1008959== 
 Invalid type 'def' on line 1
-==947002== 
-==947002== HEAP SUMMARY:
-==947002==     in use at exit: 320 bytes in 3 blocks
-==947002==   total heap usage: 1,726 allocs, 1,723 frees, 183,024 bytes allocated
-==947002== 
-==947002== 24 bytes in 1 blocks are definitely lost in loss record 1 of 3
-==947002==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==947002==    by 0x10CA8F: NodeList_new (ast.c:44)
-==947002==    by 0x109CB2: parse_program (p2-parser.c:225)
-==947002==    by 0x109DE0: parse (p2-parser.c:244)
-==947002==    by 0x10E420: main (main.c:98)
-==947002== 
-==947002== 24 bytes in 1 blocks are definitely lost in loss record 2 of 3
-==947002==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==947002==    by 0x10CA8F: NodeList_new (ast.c:44)
-==947002==    by 0x109CBB: parse_program (p2-parser.c:226)
-==947002==    by 0x109DE0: parse (p2-parser.c:244)
-==947002==    by 0x10E420: main (main.c:98)
-==947002== 
-==947002== 272 bytes in 1 blocks are definitely lost in loss record 3 of 3
-==947002==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==947002==    by 0x10DE99: Token_new (token.c:51)
-==947002==    by 0x10E857: lex (p1-lexer.c:78)
-==947002==    by 0x10E40A: main (main.c:95)
-==947002== 
-==947002== LEAK SUMMARY:
-==947002==    definitely lost: 320 bytes in 3 blocks
-==947002==    indirectly lost: 0 bytes in 0 blocks
-==947002==      possibly lost: 0 bytes in 0 blocks
-==947002==    still reachable: 0 bytes in 0 blocks
-==947002==         suppressed: 0 bytes in 0 blocks
-==947002== 
-==947002== For lists of detected and suppressed errors, rerun with: -s
-==947002== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==1008959== 
+==1008959== HEAP SUMMARY:
+==1008959==     in use at exit: 320 bytes in 3 blocks
+==1008959==   total heap usage: 1,726 allocs, 1,723 frees, 183,024 bytes allocated
+==1008959== 
+==1008959== 24 bytes in 1 blocks are definitely lost in loss record 1 of 3
+==1008959==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1008959==    by 0x10CA97: NodeList_new (ast.c:44)
+==1008959==    by 0x109CB2: parse_program (p2-parser.c:225)
+==1008959==    by 0x109DE8: parse (p2-parser.c:244)
+==1008959==    by 0x10E428: main (main.c:98)
+==1008959== 
+==1008959== 24 bytes in 1 blocks are definitely lost in loss record 2 of 3
+==1008959==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1008959==    by 0x10CA97: NodeList_new (ast.c:44)
+==1008959==    by 0x109CBB: parse_program (p2-parser.c:226)
+==1008959==    by 0x109DE8: parse (p2-parser.c:244)
+==1008959==    by 0x10E428: main (main.c:98)
+==1008959== 
+==1008959== 272 bytes in 1 blocks are definitely lost in loss record 3 of 3
+==1008959==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1008959==    by 0x10DEA1: Token_new (token.c:51)
+==1008959==    by 0x10E85F: lex (p1-lexer.c:78)
+==1008959==    by 0x10E412: main (main.c:95)
+==1008959== 
+==1008959== LEAK SUMMARY:
+==1008959==    definitely lost: 320 bytes in 3 blocks
+==1008959==    indirectly lost: 0 bytes in 0 blocks
+==1008959==      possibly lost: 0 bytes in 0 blocks
+==1008959==    still reachable: 0 bytes in 0 blocks
+==1008959==         suppressed: 0 bytes in 0 blocks
+==1008959== 
+==1008959== For lists of detected and suppressed errors, rerun with: -s
+==1008959== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
