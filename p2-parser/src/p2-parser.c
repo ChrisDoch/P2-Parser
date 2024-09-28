@@ -143,20 +143,6 @@ void parse_id (TokenQueue* input, char* buffer)
     Token_free(token);
 }
 
-ASTNode* parse_funcdecl(TokenQueue* input)
-{
-  if (TokenQueue_is_empty(input)) {
-    Error_throw_printf("Unexpected end of input (expected identifier)\n");
-  }
-  int line = get_next_token_line(input);
-  DecafType t = parse_type(input);
-  char* NAME[MAX_TOKEN_LEN];
-  parse_id(input, NAME);
-  match_and_discard_next_token(input, SYM, ";");
-  ASTNode* val = FuncDeclNode_new(NAME, t, false, 0, line);
-  return val;
-}
-
 ASTNode* parse_vardecl(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
@@ -166,8 +152,66 @@ ASTNode* parse_vardecl(TokenQueue* input)
   DecafType t = parse_type(input);
   char* NAME[MAX_TOKEN_LEN];
   parse_id(input, NAME);
+  int arraylen = 0;
+  bool isarray = false;
+  if (check_next_token(input, SYM, "[")) { // parse arrays
+    isarray = true;
+    match_and_discard_next_token(input, SYM, "[");
+    arraylen = TokenQueue_peek(input);
+    discard_next_token(input);
+    match_and_discard_next_token(input, SYM, "]");
+  }
   match_and_discard_next_token(input, SYM, ";");
-  ASTNode* val = VarDeclNode_new(NAME, t, false, 0, line);
+
+  ASTNode* val = VarDeclNode_new(NAME, t, isarray, arraylen, line);
+  return val;
+}
+
+ASTNode* parse_block(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+  NodeList* vars = NodeList_new();
+  NodeList* stmts = NodeList_new();
+  ASTNode* val;
+  int line = get_next_token_line(input);
+  if (check_next_token(input, SYM, "}")) { // checks for empty block
+    return val;
+  }
+  while (check_next_token_type(input, ID)) {
+    NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
+  }
+  val = BlockNode_new(vars, stmts, line);
+  return val;
+}
+
+ASTNode* parse_funcdecl(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+  ParameterList* params;
+  int line = get_next_token_line(input);
+  discard_next_token(input); // discard def
+  DecafType t = parse_type(input); // return type
+  match_and_discard_next_token(input, SYM, "(");
+  char* NAME[MAX_TOKEN_LEN];
+  if (!check_next_token(input, SYM, ")")) {
+    while (!check_next_token(input, SYM, ")")) {
+        DecafType paramt = parse_type(input);
+        parse_id(input, NAME);
+        ParameterList_add_new(params, NAME, paramt);
+        if (!check_next_token(input, SYM, ")")) {
+            match_and_discard_next_token(input, SYM, ",");
+        }
+    }
+    match_and_discard_next_token(input, SYM, ")");
+  }
+  get_next_token_line(input); // assumes { must be on the next line like in examples, may need later changing.
+  match_and_discard_next_token(input, SYM, "{");
+  ASTNode* block = parse_block(input);
+  ASTNode* val = FuncDeclNode_new(NAME, t, params, block, line);
   return val;
 }
 
@@ -182,7 +226,9 @@ ASTNode* parse_program (TokenQueue* input)
     
     while (!TokenQueue_is_empty(input)) {
       NodeList_add(vars, parse_vardecl(input));
-      //NodeList_add(funcs, parse_vardecl(input));
+      if (check_next_token(input, KEY, "def")) {
+        NodeList_add(funcs, parse_vardecl(input));
+      }
     }
 
     return ProgramNode_new(vars, funcs);
