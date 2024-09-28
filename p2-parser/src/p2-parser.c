@@ -157,8 +157,7 @@ ASTNode* parse_vardecl(TokenQueue* input)
   if (check_next_token(input, SYM, "[")) { // parse arrays
     isarray = true;
     match_and_discard_next_token(input, SYM, "[");
-    arraylen = TokenQueue_peek(input);
-    discard_next_token(input);
+    arraylen = TokenQueue_remove(input);
     match_and_discard_next_token(input, SYM, "]");
   }
   match_and_discard_next_token(input, SYM, ";");
@@ -179,7 +178,7 @@ ASTNode* parse_block(TokenQueue* input)
   if (check_next_token(input, SYM, "}")) { // checks for empty block
     return val;
   }
-  while (check_next_token_type(input, ID)) {
+  while (check_next_token_type(input, KEY)) {
     NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   val = BlockNode_new(vars, stmts, line);
@@ -194,12 +193,14 @@ ASTNode* parse_funcdecl(TokenQueue* input)
   ParameterList* params;
   int line = get_next_token_line(input);
   discard_next_token(input); // discard def
+  char* FUNCNAME[MAX_TOKEN_LEN];
+  parse_id(input, FUNCNAME);
   DecafType t = parse_type(input); // return type
   match_and_discard_next_token(input, SYM, "(");
-  char* NAME[MAX_TOKEN_LEN];
   if (!check_next_token(input, SYM, ")")) {
     while (!check_next_token(input, SYM, ")")) {
         DecafType paramt = parse_type(input);
+        char* NAME[MAX_TOKEN_LEN];
         parse_id(input, NAME);
         ParameterList_add_new(params, NAME, paramt);
         if (!check_next_token(input, SYM, ")")) {
@@ -211,7 +212,7 @@ ASTNode* parse_funcdecl(TokenQueue* input)
   get_next_token_line(input); // assumes { must be on the next line like in examples, may need later changing.
   match_and_discard_next_token(input, SYM, "{");
   ASTNode* block = parse_block(input);
-  ASTNode* val = FuncDeclNode_new(NAME, t, params, block, line);
+  ASTNode* val = FuncDeclNode_new(FUNCNAME, t, params, block, line);
   return val;
 }
 
@@ -225,10 +226,15 @@ ASTNode* parse_program (TokenQueue* input)
     NodeList* funcs = NodeList_new();
     
     while (!TokenQueue_is_empty(input)) {
-      NodeList_add(vars, parse_vardecl(input));
-      if (check_next_token(input, KEY, "def")) {
+      Token* start = TokenQueue_peek(input);
+      if (strcmp(start->text, "int") == 0 || strcmp(start->text, "bool") || strcmp(start->text, "void")) {
+        NodeList_add(vars, parse_vardecl(input));
+      } else if (strcmp(start->text, "def")) {
         NodeList_add(funcs, parse_vardecl(input));
+      } else {
+        TokenQueue_remove(input);
       }
+
     }
 
     return ProgramNode_new(vars, funcs);
