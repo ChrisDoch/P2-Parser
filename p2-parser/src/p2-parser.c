@@ -193,9 +193,9 @@ ASTNode* parse_funcdecl(TokenQueue* input)
   ParameterList* params;
   int line = get_next_token_line(input);
   discard_next_token(input); // discard def
+  DecafType t = parse_type(input); // return type
   char* FUNCNAME[MAX_TOKEN_LEN];
   parse_id(input, FUNCNAME);
-  DecafType t = parse_type(input); // return type
   match_and_discard_next_token(input, SYM, "(");
   if (!check_next_token(input, SYM, ")")) {
     while (!check_next_token(input, SYM, ")")) {
@@ -207,9 +207,9 @@ ASTNode* parse_funcdecl(TokenQueue* input)
             match_and_discard_next_token(input, SYM, ",");
         }
     }
-    match_and_discard_next_token(input, SYM, ")");
   }
-  get_next_token_line(input); // assumes { must be on the next line like in examples, may need later changing.
+  match_and_discard_next_token(input, SYM, ")");
+  // get_next_token_line(input); // assumes { must be on the next line like in examples, may need later changing.
   match_and_discard_next_token(input, SYM, "{");
   ASTNode* block = parse_block(input);
   ASTNode* val = FuncDeclNode_new(FUNCNAME, t, params, block, line);
@@ -234,7 +234,6 @@ ASTNode* parse_program (TokenQueue* input)
       } else {
         TokenQueue_remove(input);
       }
-
     }
 
     return ProgramNode_new(vars, funcs);
