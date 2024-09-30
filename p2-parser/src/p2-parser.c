@@ -171,17 +171,20 @@ ASTNode* parse_block(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  match_and_discard_next_token(input, SYM, "{");
   NodeList* vars = NodeList_new();
   NodeList* stmts = NodeList_new();
   ASTNode* val;
   int line = get_next_token_line(input);
   if (check_next_token(input, SYM, "}")) { // checks for empty block
+    match_and_discard_next_token(input, SYM, "}");
     return val;
   }
   while (check_next_token_type(input, KEY)) { // NEEDS CHANGING to account for Decaftypes specifically, not keys
     NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   val = BlockNode_new(vars, stmts, line);
+  match_and_discard_next_token(input, SYM, "}");
   return val;
 }
 
@@ -209,8 +212,6 @@ ASTNode* parse_funcdecl(TokenQueue* input)
     }
   }
   match_and_discard_next_token(input, SYM, ")");
-  // get_next_token_line(input); // assumes { must be on the next line like in examples, may need later changing.
-  match_and_discard_next_token(input, SYM, "{");
   ASTNode* block = parse_block(input);
   ASTNode* val = FuncDeclNode_new(FUNCNAME, t, params, block, line);
   return val;
@@ -230,7 +231,7 @@ ASTNode* parse_program (TokenQueue* input)
       if (strcmp(start->text, "int") == 0 || strcmp(start->text, "bool") == 0 || strcmp(start->text, "void") == 0) {
         NodeList_add(vars, parse_vardecl(input));
       } else if (strcmp(start->text, "def") == 0) {
-        NodeList_add(funcs, parse_vardecl(input));
+        NodeList_add(funcs, parse_funcdecl(input));
       } else {
         Error_throw_printf("Unexpected input (expected Variable or Function)\n");
       }
