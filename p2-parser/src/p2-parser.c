@@ -173,11 +173,41 @@ ASTNode* parse_loc(TokenQueue* input)
   }
 }
 
+ASTNode* parse_expr(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
 ASTNode* parse_stmt(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  ASTNode* stmt;
+  Token* token = TokenQueue_peek(input);
+  token = token->next;
+  if (check_next_token(input, SYM, "(")) { // checks if function name
+      NodeList_add(stmts, parse_func)
+  } else if (check_next_token(input, SYM, "=")) {
+  } else if (token->text == "if") {
+  } else if (token->text == "else") {
+  } else if (token->text == "while") {
+  } else if (token->text == "return") {
+    if (check_next_token(input, SYM, ";")) {
+      match_and_discard_next_token(input, SYM, ";");
+    } else {
+      parse_expr(input)
+    }
+  } else if (token->text == "break") {
+    match_and_discard_next_token(input, SYM, ";");
+  } else if (token->text == "continue") {
+    match_and_discard_next_token(input, SYM, ";");
+  } else {
+    Error_throw_printf("Unexpected token in block\n");
+  }
+  return stmt;
 }
 
 ASTNode* parse_block(TokenQueue* input)
@@ -198,20 +228,6 @@ ASTNode* parse_block(TokenQueue* input)
     NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   while (check_next_token_type(input, KEY) || check_next_token_type(input, ID)) { // checks for lookups and statments
-    Token* token = TokenQueue_remove(input);
-    switch (token) { // TODO add check for function name
-      case token->type == ID:
-      case token->text == "if":
-      case token->text == "else":
-      case token->text == "while":
-      case token->text == "return":
-      case token->text == "break":
-        match_and_discard_next_token(input, SYM, ";");
-      case token->text == "continue":
-        match_and_discard_next_token(input, SYM, ";");
-      default:
-        Error_throw_printf("Unexpected token in block\n");
-    }
     NodeList_add(stmts, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   val = BlockNode_new(vars, stmts, line);
