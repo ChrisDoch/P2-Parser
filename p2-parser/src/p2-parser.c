@@ -188,21 +188,26 @@ ASTNode* parse_stmt(TokenQueue* input)
   ASTNode* stmt;
   Token* token = TokenQueue_peek(input);
   token = token->next;
-  if (check_next_token(input, SYM, "(")) { // checks if function name
+  if (token_str_eq((token->next)->text, "(")) { // checks if function name
       NodeList_add(stmts, parse_func)
-  } else if (check_next_token(input, SYM, "=")) {
+  } else if (token_str_eq((token->next)->text, "=")) {
   } else if (token->text == "if") {
   } else if (token->text == "else") {
   } else if (token->text == "while") {
   } else if (token->text == "return") {
+    ASTNode* type;
     if (check_next_token(input, SYM, ";")) {
-      match_and_discard_next_token(input, SYM, ";");
+      // nothing
     } else {
-      parse_expr(input)
+      type = parse_expr(input);
     }
+    stmt = ReturnNode_new(type, get_next_token_line(input));
+    match_and_discard_next_token(input, SYM, ";");
   } else if (token->text == "break") {
+    match_and_discard_next_token(input, KEY, "break");
     match_and_discard_next_token(input, SYM, ";");
   } else if (token->text == "continue") {
+    match_and_discard_next_token(input, KEY, "continue");
     match_and_discard_next_token(input, SYM, ";");
   } else {
     Error_throw_printf("Unexpected token in block\n");
