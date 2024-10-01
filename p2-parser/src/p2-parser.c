@@ -166,7 +166,42 @@ ASTNode* parse_vardecl(TokenQueue* input)
   return val;
 }
 
+ASTNode* parse_args(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
+ASTNode* parse_funccall(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
 ASTNode* parse_loc(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
+ASTNode* parse_baseexpr(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
+ASTNode* parse_unaryexpr(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
+ASTNode* parse_binexpr(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
@@ -189,7 +224,7 @@ ASTNode* parse_stmt(TokenQueue* input)
   Token* token = TokenQueue_peek(input);
   token = token->next;
   if (token_str_eq((token->next)->text, "(")) { // checks if function name
-      NodeList_add(stmts, parse_func)
+    stmt = parse_funccall(input);
   } else if (token_str_eq((token->next)->text, "=")) {
   } else if (token->text == "if") {
   } else if (token->text == "else") {
