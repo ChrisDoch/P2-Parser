@@ -166,6 +166,20 @@ ASTNode* parse_vardecl(TokenQueue* input)
   return val;
 }
 
+ASTNode* parse_loc(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
+ASTNode* parse_stmt(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+}
+
 ASTNode* parse_block(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
@@ -180,8 +194,25 @@ ASTNode* parse_block(TokenQueue* input)
     match_and_discard_next_token(input, SYM, "}");
     return val;
   }
-  while (check_next_token_type(input, KEY)) { // NEEDS CHANGING to account for Decaftypes specifically, not keys
+  while (check_next_token(input, KEY, "int") || check_next_token(input, KEY, "bool") || check_next_token(input, KEY, "void")) { // NEEDS CHANGING to account for Decaftypes specifically, not keys
     NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
+  }
+  while (check_next_token_type(input, KEY) || check_next_token_type(input, ID)) { // checks for lookups and statments
+    Token* token = TokenQueue_remove(input);
+    switch (token) { // TODO add check for function name
+      case token->type == ID:
+      case token->text == "if":
+      case token->text == "else":
+      case token->text == "while":
+      case token->text == "return":
+      case token->text == "break":
+        match_and_discard_next_token(input, SYM, ";");
+      case token->text == "continue":
+        match_and_discard_next_token(input, SYM, ";");
+      default:
+        Error_throw_printf("Unexpected token in block\n");
+    }
+    NodeList_add(stmts, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   val = BlockNode_new(vars, stmts, line);
   match_and_discard_next_token(input, SYM, "}");
