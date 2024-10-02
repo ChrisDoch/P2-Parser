@@ -215,6 +215,8 @@ ASTNode* parse_expr(TokenQueue* input)
   }
 }
 
+ASTNode* parse_block(TokenQueue* input); // declare so can be referenced by parse_stmt
+
 ASTNode* parse_stmt(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
