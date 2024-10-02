@@ -225,7 +225,13 @@ ASTNode* parse_stmt(TokenQueue* input)
   int curline = get_next_token_line(input);
   ASTNode* stmt;
   Token* token = TokenQueue_peek(input);
-  if (token_str_eq((token->next)->text, "=")) {
+  if (token_str_eq((token->next)->text, "=")) { // assignment
+    char* LOCNAME[MAX_TOKEN_LEN];
+    parse_id(input, FUNCNAME);
+    ASTNode* lookup = parse_loc;
+    match_and_discard_next_token(input, SYM, "=");
+    ASTNode* expr = parse_expr(input);
+    stmt = AssignmentNode_new(lookup, expr, curline);
   } else if (token->text == "if") { // if condition
     match_and_discard_next_token(input, SYM, "(");
     ASTNode* expr = parse_expr(input);
@@ -260,7 +266,7 @@ ASTNode* parse_stmt(TokenQueue* input)
     match_and_discard_next_token(input, KEY, "continue");
     match_and_discard_next_token(input, SYM, ";");
   } else if (token_str_eq((token->next)->text, "(")) { // checks if function name
-    stmt = parse_funccall(input);
+    stmt = parse_funccall(input); 
   } else {
     Error_throw_printf("Unexpected token in block\n");
   }

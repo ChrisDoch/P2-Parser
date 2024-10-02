@@ -1,10 +1,10 @@
 A_sourceinfo                   FAIL (see outputs/A_sourceinfo.diff for details)
 Memory leak(s) found. See files listed below for details.
-  - ==2611931== 24 bytes in 1 blocks are definitely lost in loss record 3 of 7
-  - ==2611931== 24 bytes in 1 blocks are definitely lost in loss record 4 of 7
-  - ==2611931== 272 bytes in 1 blocks are definitely lost in loss record 5 of 7
-  - ==2611931== 656 (304 direct, 352 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
-  - ==2611931==    definitely lost
+  - ==216367== 24 bytes in 1 blocks are definitely lost in loss record 3 of 7
+  - ==216367== 24 bytes in 1 blocks are definitely lost in loss record 4 of 7
+  - ==216367== 272 bytes in 1 blocks are definitely lost in loss record 5 of 7
+  - ==216367== 656 (304 direct, 352 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
+  - ==216367==    definitely lost
 No uninitialized value found.
 ========================================
  NOTICE: THIS TESTSUITE IS INCOMPLETE.
