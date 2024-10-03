@@ -155,7 +155,7 @@ ASTNode* parse_lit(TokenQueue* input)
 
   } else if (t->type == STRLIT) {
 
-  } else if (t == DECLIT) {
+  } else if (t->type == DECLIT) {
 
   } else if (token_str_eq(t->text, "true")) {
 
