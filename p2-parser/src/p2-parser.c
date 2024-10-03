@@ -145,6 +145,27 @@ void parse_id (TokenQueue* input, char* buffer)
 
 ASTNode* parse_expr(TokenQueue* input); // for use in location and args
 
+ASTNode* parse_lit(TokenQueue* input)
+{
+  if (TokenQueue_is_empty(input)) {
+    Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+  Token* t = TokenQueue_peek(input);
+  if (t->type == HEXLIT) {
+
+  } else if (t->type == STRLIT) {
+
+  } else if (t == DECLIT) {
+
+  } else if (token_str_eq(t->text, "true")) {
+
+  } else if (token_str_eq(t->text, "false")) {
+
+  } else {
+    Error_throw_printf("Unexpected literal\n");
+  }
+}
+
 ASTNode* parse_vardecl(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
