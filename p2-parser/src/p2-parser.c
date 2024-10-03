@@ -174,7 +174,7 @@ ASTNode* parse_args(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
-  NodeList* args;
+  NodeList* args = NodeList_new();
   if (check_next_token(input, SYM, ")")) { // returns if no arguments
     return args;
   }
@@ -278,7 +278,7 @@ ASTNode* parse_stmt(TokenQueue* input)
     ASTNode* body = parse_block(input);
     stmt = WhileLoopNode_new(expr, body, curline);
   } else if (token->text == "return") { // return
-    ASTNode* type;
+    ASTNode* type = NULL;
     if (check_next_token(input, SYM, ";")) {
       // nothing
     } else {
@@ -311,7 +311,7 @@ ASTNode* parse_block(TokenQueue* input)
   match_and_discard_next_token(input, SYM, "{");
   NodeList* vars = NodeList_new();
   NodeList* stmts = NodeList_new();
-  ASTNode* val;
+  ASTNode* val = NULL;
   int line = get_next_token_line(input);
   if (check_next_token(input, SYM, "}")) { // checks for empty block
     match_and_discard_next_token(input, SYM, "}");
