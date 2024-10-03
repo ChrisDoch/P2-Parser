@@ -143,6 +143,8 @@ void parse_id (TokenQueue* input, char* buffer)
     Token_free(token);
 }
 
+ASTNode* parse_expr(TokenQueue* input); // for use in location and args
+
 ASTNode* parse_vardecl(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
@@ -171,6 +173,13 @@ ASTNode* parse_args(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  NodeList* args;
+  NodeList_add(args, parse_expr(input));
+  while (token_str_eq(TokenQueue_peek(input), ",")) { // checks for multiple arguments
+    match_and_discard_next_token(input, SYM, ",");
+    NodeList_add(args, parse_expr(input));
+  }
+  return args; // returns node list
 }
 
 ASTNode* parse_funccall(TokenQueue* input)
@@ -185,6 +194,15 @@ ASTNode* parse_loc(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  ASTNode* array_expr = NULL;
+  char* LOCNAME[MAX_TOKEN_LEN];
+  parse_id(input, LOCNAME);
+  if (check_next_token(input, SYM, "[")) { // parse arrays
+    match_and_discard_next_token(input, SYM, "[");
+    array_expr = parse_expr(input);
+    match_and_discard_next_token(input, SYM, "]");
+  }
+  return LocationNode_new(LOCNAME, array_expr, get_next_token_line(input));
 }
 
 ASTNode* parse_baseexpr(TokenQueue* input)
@@ -213,6 +231,7 @@ ASTNode* parse_expr(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  return parse_binexpr(input);
 }
 
 ASTNode* parse_block(TokenQueue* input); // declare so can be referenced by parse_stmt
@@ -227,11 +246,12 @@ ASTNode* parse_stmt(TokenQueue* input)
   Token* token = TokenQueue_peek(input);
   if (token_str_eq((token->next)->text, "=")) { // assignment
     char* LOCNAME[MAX_TOKEN_LEN];
-    parse_id(input, LOCNAME);
+    parse_id(input, FUNCNAME);
     ASTNode* lookup = parse_loc;
     match_and_discard_next_token(input, SYM, "=");
     ASTNode* expr = parse_expr(input);
     stmt = AssignmentNode_new(lookup, expr, curline);
+    match_and_discard_next_token(input, SYM, ";");
   } else if (token->text == "if") { // if condition
     match_and_discard_next_token(input, SYM, "(");
     ASTNode* expr = parse_expr(input);
@@ -266,7 +286,8 @@ ASTNode* parse_stmt(TokenQueue* input)
     match_and_discard_next_token(input, KEY, "continue");
     match_and_discard_next_token(input, SYM, ";");
   } else if (token_str_eq((token->next)->text, "(")) { // checks if function name
-    stmt = parse_funccall(input); 
+    stmt = parse_funccall(input);
+    match_and_discard_next_token(input, SYM, ";");
   } else {
     Error_throw_printf("Unexpected token in block\n");
   }
