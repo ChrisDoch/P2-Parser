@@ -328,12 +328,27 @@ ASTNode* parse_block(TokenQueue* input)
   return val;
 }
 
-ASTNode* parse_funcdecl(TokenQueue* input) // TODO needs updating for params
+ASTNode* parse_param(TokenQueue* input)
+{
+  ParameterList* params;
+  while (!check_next_token(input, SYM, ")")) {
+    DecafType paramt = parse_type(input);
+    char* NAME[MAX_TOKEN_LEN];
+    parse_id(input, NAME);
+    ParameterList_add_new(params, NAME, paramt);
+    if (!check_next_token(input, SYM, ")")) { // check if not last param
+      match_and_discard_next_token(input, SYM, ",");
+    }
+  }
+  return params;
+}
+
+ASTNode* parse_funcdecl(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
-  ParameterList* params;
+  ParameterList* params = NULL;
   int line = get_next_token_line(input);
   discard_next_token(input); // discard def
   DecafType t = parse_type(input); // return type
@@ -341,15 +356,7 @@ ASTNode* parse_funcdecl(TokenQueue* input) // TODO needs updating for params
   parse_id(input, FUNCNAME);
   match_and_discard_next_token(input, SYM, "("); // start of params
   if (!check_next_token(input, SYM, ")")) { // check if not empty
-    while (!check_next_token(input, SYM, ")")) {
-        DecafType paramt = parse_type(input);
-        char* NAME[MAX_TOKEN_LEN];
-        parse_id(input, NAME);
-        ParameterList_add_new(params, NAME, paramt);
-        if (!check_next_token(input, SYM, ")")) { // check if not last param
-            match_and_discard_next_token(input, SYM, ",");
-        }
-    }
+    params = parse_param(input);
   }
   match_and_discard_next_token(input, SYM, ")");
   ASTNode* block = parse_block(input);
