@@ -194,7 +194,6 @@ ASTNode* parse_vardecl(TokenQueue* input)
 
 ASTNode* parse_args(TokenQueue* input)
 {
-  int curline = get_next_token_line(input);
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
@@ -286,23 +285,23 @@ ASTNode* parse_stmt(TokenQueue* input)
     ASTNode* expr = parse_expr(input);
     stmt = AssignmentNode_new(lookup, expr, curline);
     match_and_discard_next_token(input, SYM, ";");
-  } else if (token->text == "if") { // if condition
+  } else if (token_str_eq(token->text, "if")) { // if condition
     match_and_discard_next_token(input, SYM, "(");
     ASTNode* expr = parse_expr(input);
     match_and_discard_next_token(input, SYM, ")");
     ASTNode* body = parse_block(input);
     ASTNode* body_else;
-    if (TokenQueue_peek(input)->text == "else") { // else condition
+    if (token_str_eq(TokenQueue_peek(input)->text, "else")) { // else condition
       body_else = parse_block(input);
     }
     stmt = ConditionalNode_new(expr, body, body_else, curline);
-  } else if (token->text == "while") { // while loop
+  } else if (token_str_eq(token->text, "while")) { // while loop
     match_and_discard_next_token(input, SYM, "(");
     ASTNode* expr = parse_expr(input);
     match_and_discard_next_token(input, SYM, ")");
     ASTNode* body = parse_block(input);
     stmt = WhileLoopNode_new(expr, body, curline);
-  } else if (token->text == "return") { // return
+  } else if (token_str_eq(token->text, "return")) { // return
     ASTNode* type = NULL;
     if (check_next_token(input, SYM, ";")) {
       // nothing
@@ -311,11 +310,11 @@ ASTNode* parse_stmt(TokenQueue* input)
     }
     stmt = ReturnNode_new(type, curline);
     match_and_discard_next_token(input, SYM, ";");
-  } else if (token->text == "break") { // break
+  } else if (token_str_eq(token->text, "break")) { // break
     stmt = BreakNode_new(curline);
     match_and_discard_next_token(input, KEY, "break");
     match_and_discard_next_token(input, SYM, ";");
-  } else if (token->text == "continue") { // continue
+  } else if (token_str_eq(token->text, "continue")) { // continue
     stmt = ContinueNode_new(curline);
     match_and_discard_next_token(input, KEY, "continue");
     match_and_discard_next_token(input, SYM, ";");
