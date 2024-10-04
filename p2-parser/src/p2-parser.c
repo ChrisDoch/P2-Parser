@@ -264,14 +264,20 @@ ASTNode* parse_unaryexpr(TokenQueue* input)
   }
   int curline = get_next_token_line(input);
   UnaryOpType op;
+  bool opisnull = true;
   char *unop[] = {"-", "!"};
   for (int i = 0; i < sizeof(unop); i++) {
     if (token_str_eq(unop[i], TokenQueue_peek(input)->text)) {
       op = StringToUnaryOp(unop[i]);
+      opisnull = false;
     }
   }
   ASTNode* child = parse_baseexpr(input);
-  return UnaryOpNode_new(op, child, curline);
+  if (opisnull) {
+    return child;
+  } else {
+    return UnaryOpNode_new(op, child, curline);
+  }
 }
 
 const BinaryOpType StringToBinaryOp(char* op)
@@ -314,16 +320,18 @@ ASTNode* parse_binexpr(TokenQueue* input)
   }
   int curline = get_next_token_line(input);
   BinaryOpType op;
+  bool opisnull = true;
   ASTNode* left = parse_unaryexpr(input);
   ASTNode* right = NULL;
   char *binop[] = {"||", "&&", "==", "!=", "<", "<=", ">=", ">", "+", "-", "*", "/", "%"};
   for (int i = 0; i < sizeof(binop); i++) {
     if (token_str_eq(binop[i], TokenQueue_peek(input)->text)) {
       op = StringToBinaryOp(binop[i]);
+      opisnull = false;
       right = parse_unaryexpr(input);
     }
   }
-  if (right == NULL) {
+  if (opisnull) {
     return left;
   } else {
     return BinaryOpNode_new(op, left, right, curline);
