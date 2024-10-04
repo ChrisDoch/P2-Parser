@@ -157,7 +157,14 @@ ASTNode* parse_lit(TokenQueue* input)
     int num = (int)strtol(t->text, NULL, 16);
     lit = LiteralNode_new_int(num, curline);
   } else if (t->type == STRLIT) { // TODO string 
-
+    char text[MAX_TOKEN_LEN];
+    int i = 1;
+    while (i < sizeof(t->text) - 1) {
+      text[i - 1] = t->text[i];
+      i += 1;
+    }
+    text[i - 1] = '\0';
+    lit = LiteralNode_new_string(text, curline);
   } else if (t->type == DECLIT) { // int
     int num = atoi(t->text);
     lit = LiteralNode_new_int(num, curline);
