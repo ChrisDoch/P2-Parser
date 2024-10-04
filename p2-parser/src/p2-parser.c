@@ -178,13 +178,16 @@ ASTNode* parse_vardecl(TokenQueue* input)
   DecafType t = parse_type(input);
   char NAME[MAX_TOKEN_LEN];
   parse_id(input, NAME);
-  int arraylen = 0;
+  int arraylen = 1;
   bool isarray = false;
   if (check_next_token(input, SYM, "[")) { // parse arrays
     isarray = true;
-    match_and_discard_next_token(input, SYM, "[");
-    arraylen = TokenQueue_remove(input);
-    match_and_discard_next_token(input, SYM, "]");
+    match_and_discard_next_token (input, SYM, "[");
+    while (!check_next_token (input, SYM, "]")) {
+      TokenQueue_remove (input);
+      arraylen += 1;
+    }
+    match_and_discard_next_token (input, SYM, "]");
   }
   match_and_discard_next_token(input, SYM, ";");
 
@@ -244,7 +247,6 @@ ASTNode* parse_baseexpr(TokenQueue* input)
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
   ASTNode* base;
-  int curline = get_next_token_line(input);
   Token* t = TokenQueue_peek(input);
   if (token_str_eq(t->text, "(")) { // looks for nexted expression
     base = parse_expr(input);
@@ -396,9 +398,7 @@ ASTNode* parse_stmt(TokenQueue* input)
     stmt = WhileLoopNode_new(expr, body, curline);
   } else if (token_str_eq(token->text, "return")) { // return
     ASTNode* type = NULL;
-    if (check_next_token(input, SYM, ";")) {
-      // nothing
-    } else {
+    if (!check_next_token(input, SYM, ";")) {
       type = parse_expr(input);
     }
     stmt = ReturnNode_new(type, curline);
