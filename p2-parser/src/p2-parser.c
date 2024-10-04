@@ -157,13 +157,25 @@ ASTNode* parse_lit(TokenQueue* input)
     int num = (int)strtol(t->text, NULL, 16);
     lit = LiteralNode_new_int(num, curline);
   } else if (t->type == STRLIT) { // TODO string 
-    char text[MAX_TOKEN_LEN];
     int i = 1;
+    int j = 0;
+    char text[MAX_TOKEN_LEN];
     while (i < sizeof(t->text) && (t->text[i]) && (t->text[i] != '"')) {
-      text[i - 1] = t->text[i];
-      i += 1;
+      if (t->text[i] == '\\') {
+        if (t->text[i + 1] == 'n') {
+          text[j++] = '\n';
+        } else if (t->text[i + 1] == 't') {
+          text[j++] = '\t';
+        } else if (t->text[i + 1] == 'r') {
+          text[j++] = '\r';
+        }
+        i += 2;
+      } else {
+        text[j++] = t->text[i];
+        i += 1;
+      }
     }
-    text[i - 1] = '\0';
+    text[j] = '\0';
     lit = LiteralNode_new_string(text, curline);
   } else if (t->type == DECLIT) { // int
     int num = atoi(t->text);
@@ -502,6 +514,12 @@ ASTNode* parse_program (TokenQueue* input) // reject invalid programs and func p
 {
     NodeList* vars = NodeList_new();
     NodeList* funcs = NodeList_new();
+
+    if (input == NULL) {
+      Error_throw_printf("NULL token queue\n");
+      ASTNode* error = NULL;
+      return error;
+    }
     
     while (!TokenQueue_is_empty(input)) {
       Token* start = TokenQueue_peek(input);
