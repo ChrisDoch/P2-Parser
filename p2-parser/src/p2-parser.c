@@ -492,10 +492,10 @@ ASTNode* parse_program (TokenQueue* input)
     
     while (!TokenQueue_is_empty(input)) {
       Token* start = TokenQueue_peek(input);
-      if (strcmp(start->text, "int") == 0 || strcmp(start->text, "bool") == 0 || strcmp(start->text, "void") == 0) {
-        NodeList_add(vars, parse_vardecl(input));
-      } else if (strcmp(start->text, "def") == 0) {
+      if (strcmp(start->text, "def") == 0) {
         NodeList_add(funcs, parse_funcdecl(input));
+      } else if (start->type == KEY) {
+        NodeList_add(vars, parse_vardecl(input));
       } else {
         Error_throw_printf("Unexpected input (expected Variable or Function)\n");
       }
