@@ -247,7 +247,6 @@ ASTNode* parse_baseexpr(TokenQueue* input)
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
   ASTNode* base;
-  int curline = get_next_token_line(input);
   Token* t = TokenQueue_peek(input);
   if (token_str_eq(t->text, "(")) { // looks for nexted expression
     base = parse_expr(input);
@@ -399,11 +398,11 @@ ASTNode* parse_stmt(TokenQueue* input)
     stmt = WhileLoopNode_new(expr, body, curline);
   } else if (token_str_eq(token->text, "return")) { // return
     ASTNode* type = NULL;
+    match_and_discard_next_token(input, KEY, "return");
     if (!check_next_token(input, SYM, ";")) {
       type = parse_expr(input);
     }
     stmt = ReturnNode_new(type, curline);
-    match_and_discard_next_token(input, KEY, "return");
     match_and_discard_next_token(input, SYM, ";");
   } else if (token_str_eq(token->text, "break")) { // break
     stmt = BreakNode_new(curline);
