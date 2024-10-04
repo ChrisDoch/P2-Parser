@@ -147,23 +147,26 @@ ASTNode* parse_expr(TokenQueue* input); // for use in location and args
 
 ASTNode* parse_lit(TokenQueue* input)
 {
+  int curline = get_next_token_line(input);
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
   Token* t = TokenQueue_peek(input);
+  ASTNode* lit = NULL;
   if (t->type == HEXLIT) {
 
-  } else if (t->type == STRLIT) {
+  } else if (t->type == STRLIT) { // string
 
-  } else if (t->type == DECLIT) {
-
-  } else if (token_str_eq(t->text, "true")) {
-
-  } else if (token_str_eq(t->text, "false")) {
-
+  } else if (t->type == DECLIT) { // int
+    lit = LiteralNode_new_int(atoi(t->text), curline);
+  } else if (token_str_eq(t->text, "true")) { // true bool
+    LiteralNode_new_bool(true, curline);
+  } else if (token_str_eq(t->text, "false")) { // false bool
+    LiteralNode_new_bool(false, curline);
   } else {
     Error_throw_printf("Unexpected literal\n");
   }
+  return lit;
 }
 
 ASTNode* parse_vardecl(TokenQueue* input)
@@ -173,7 +176,7 @@ ASTNode* parse_vardecl(TokenQueue* input)
   }
   int line = get_next_token_line(input);
   DecafType t = parse_type(input);
-  char* NAME[MAX_TOKEN_LEN];
+  char NAME[MAX_TOKEN_LEN];
   parse_id(input, NAME);
   int arraylen = 0;
   bool isarray = false;
@@ -212,8 +215,7 @@ ASTNode* parse_funccall(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
-  int curline = get_next_token_line(input);
-  char* FUNCNAME[MAX_TOKEN_LEN];
+  char FUNCNAME[MAX_TOKEN_LEN];
   parse_id(input, FUNCNAME);
   match_and_discard_next_token(input, SYM, "(");
   return FuncCallNode_new(FUNCNAME, parse_args(input), curline);
@@ -226,7 +228,7 @@ ASTNode* parse_loc(TokenQueue* input)
   }
   int curline = get_next_token_line(input);
   ASTNode* array_expr = NULL;
-  char* LOCNAME[MAX_TOKEN_LEN];
+  char LOCNAME[MAX_TOKEN_LEN];
   parse_id(input, LOCNAME);
   if (check_next_token(input, SYM, "[")) { // parse arrays
     match_and_discard_next_token(input, SYM, "[");
@@ -276,8 +278,8 @@ ASTNode* parse_stmt(TokenQueue* input)
   ASTNode* stmt;
   Token* token = TokenQueue_peek(input);
   if (token_str_eq((token->next)->text, "=")) { // assignment
-    char* LOCNAME[MAX_TOKEN_LEN];
-    parse_id(input, LOCNAME);
+    char LOCNAME[MAX_TOKEN_LEN];
+    parse_id(input, FUNCNAME);
     ASTNode* lookup = parse_loc;
     match_and_discard_next_token(input, SYM, "=");
     ASTNode* expr = parse_expr(input);
@@ -355,7 +357,7 @@ ASTNode* parse_param(TokenQueue* input)
   ParameterList* params;
   while (!check_next_token(input, SYM, ")")) {
     DecafType paramt = parse_type(input);
-    char* NAME[MAX_TOKEN_LEN];
+    char NAME[MAX_TOKEN_LEN];
     parse_id(input, NAME);
     ParameterList_add_new(params, NAME, paramt);
     if (!check_next_token(input, SYM, ")")) { // check if not last param
@@ -374,7 +376,7 @@ ASTNode* parse_funcdecl(TokenQueue* input)
   int line = get_next_token_line(input);
   discard_next_token(input); // discard def
   DecafType t = parse_type(input); // return type
-  char* FUNCNAME[MAX_TOKEN_LEN];
+  char FUNCNAME[MAX_TOKEN_LEN];
   parse_id(input, FUNCNAME);
   match_and_discard_next_token(input, SYM, "("); // start of params
   if (!check_next_token(input, SYM, ")")) { // check if not empty
