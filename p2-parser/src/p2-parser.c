@@ -153,16 +153,16 @@ ASTNode* parse_lit(TokenQueue* input)
   }
   Token* t = TokenQueue_peek(input);
   ASTNode* lit = NULL;
-  if (t->type == HEXLIT) {
+  if (t->type == HEXLIT) { // TODO hex
 
-  } else if (t->type == STRLIT) { // string
+  } else if (t->type == STRLIT) { // TODO string 
 
   } else if (t->type == DECLIT) { // int
     lit = LiteralNode_new_int(atoi(t->text), curline);
   } else if (token_str_eq(t->text, "true")) { // true bool
-    LiteralNode_new_bool(true, curline);
+    lit = LiteralNode_new_bool(true, curline);
   } else if (token_str_eq(t->text, "false")) { // false bool
-    LiteralNode_new_bool(false, curline);
+    lit = LiteralNode_new_bool(false, curline);
   } else {
     Error_throw_printf("Unexpected literal\n");
   }
