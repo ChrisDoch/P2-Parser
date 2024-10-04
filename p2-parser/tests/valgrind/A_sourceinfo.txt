@@ -1,58 +1,58 @@
-==3578552== Memcheck, a memory error detector
-==3578552== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==3578552== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
-==3578552== Command: ../decaf inputs/add.decaf
-==3578552== 
+==512728== Memcheck, a memory error detector
+==512728== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==512728== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==512728== Command: ../decaf inputs/add.decaf
+==512728== 
 Invalid ID '=' on line 4
-==3578552== 
-==3578552== HEAP SUMMARY:
-==3578552==     in use at exit: 672 bytes in 6 blocks
-==3578552==   total heap usage: 1,729 allocs, 1,723 frees, 183,376 bytes allocated
-==3578552== 
-==3578552== 24 bytes in 1 blocks are definitely lost in loss record 1 of 6
-==3578552==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3578552==    by 0x10DBA1: NodeList_new (ast.c:44)
-==3578552==    by 0x10ADBC: parse_program (p2-parser.c:490)
-==3578552==    by 0x10AEF2: parse (p2-parser.c:509)
-==3578552==    by 0x10F532: main (main.c:98)
-==3578552== 
-==3578552== 24 bytes in 1 blocks are definitely lost in loss record 2 of 6
-==3578552==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3578552==    by 0x10DBA1: NodeList_new (ast.c:44)
-==3578552==    by 0x10ADC5: parse_program (p2-parser.c:491)
-==3578552==    by 0x10AEF2: parse (p2-parser.c:509)
-==3578552==    by 0x10F532: main (main.c:98)
-==3578552== 
-==3578552== 24 bytes in 1 blocks are definitely lost in loss record 3 of 6
-==3578552==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3578552==    by 0x10DBA1: NodeList_new (ast.c:44)
-==3578552==    by 0x10A9E7: parse_block (p2-parser.c:430)
-==3578552==    by 0x10AD50: parse_funcdecl (p2-parser.c:479)
-==3578552==    by 0x10AE82: parse_program (p2-parser.c:498)
-==3578552==    by 0x10AEF2: parse (p2-parser.c:509)
-==3578552==    by 0x10F532: main (main.c:98)
-==3578552== 
-==3578552== 272 bytes in 1 blocks are definitely lost in loss record 4 of 6
-==3578552==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3578552==    by 0x10EFAB: Token_new (token.c:51)
-==3578552==    by 0x10FC54: lex (p1-lexer.c:102)
-==3578552==    by 0x10F51C: main (main.c:95)
-==3578552== 
-==3578552== 328 (24 direct, 304 indirect) bytes in 1 blocks are definitely lost in loss record 6 of 6
-==3578552==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3578552==    by 0x10DBA1: NodeList_new (ast.c:44)
-==3578552==    by 0x10A9DE: parse_block (p2-parser.c:429)
-==3578552==    by 0x10AD50: parse_funcdecl (p2-parser.c:479)
-==3578552==    by 0x10AE82: parse_program (p2-parser.c:498)
-==3578552==    by 0x10AEF2: parse (p2-parser.c:509)
-==3578552==    by 0x10F532: main (main.c:98)
-==3578552== 
-==3578552== LEAK SUMMARY:
-==3578552==    definitely lost: 368 bytes in 5 blocks
-==3578552==    indirectly lost: 304 bytes in 1 blocks
-==3578552==      possibly lost: 0 bytes in 0 blocks
-==3578552==    still reachable: 0 bytes in 0 blocks
-==3578552==         suppressed: 0 bytes in 0 blocks
-==3578552== 
-==3578552== For lists of detected and suppressed errors, rerun with: -s
-==3578552== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==512728== 
+==512728== HEAP SUMMARY:
+==512728==     in use at exit: 672 bytes in 6 blocks
+==512728==   total heap usage: 1,729 allocs, 1,723 frees, 183,376 bytes allocated
+==512728== 
+==512728== 24 bytes in 1 blocks are definitely lost in loss record 1 of 6
+==512728==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==512728==    by 0x10DBD5: NodeList_new (ast.c:44)
+==512728==    by 0x10ADF0: parse_program (p2-parser.c:491)
+==512728==    by 0x10AF26: parse (p2-parser.c:510)
+==512728==    by 0x10F566: main (main.c:98)
+==512728== 
+==512728== 24 bytes in 1 blocks are definitely lost in loss record 2 of 6
+==512728==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==512728==    by 0x10DBD5: NodeList_new (ast.c:44)
+==512728==    by 0x10ADF9: parse_program (p2-parser.c:492)
+==512728==    by 0x10AF26: parse (p2-parser.c:510)
+==512728==    by 0x10F566: main (main.c:98)
+==512728== 
+==512728== 24 bytes in 1 blocks are definitely lost in loss record 3 of 6
+==512728==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==512728==    by 0x10DBD5: NodeList_new (ast.c:44)
+==512728==    by 0x10AA1B: parse_block (p2-parser.c:431)
+==512728==    by 0x10AD84: parse_funcdecl (p2-parser.c:480)
+==512728==    by 0x10AEB6: parse_program (p2-parser.c:499)
+==512728==    by 0x10AF26: parse (p2-parser.c:510)
+==512728==    by 0x10F566: main (main.c:98)
+==512728== 
+==512728== 272 bytes in 1 blocks are definitely lost in loss record 4 of 6
+==512728==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==512728==    by 0x10EFDF: Token_new (token.c:51)
+==512728==    by 0x10FC88: lex (p1-lexer.c:102)
+==512728==    by 0x10F550: main (main.c:95)
+==512728== 
+==512728== 328 (24 direct, 304 indirect) bytes in 1 blocks are definitely lost in loss record 6 of 6
+==512728==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==512728==    by 0x10DBD5: NodeList_new (ast.c:44)
+==512728==    by 0x10AA12: parse_block (p2-parser.c:430)
+==512728==    by 0x10AD84: parse_funcdecl (p2-parser.c:480)
+==512728==    by 0x10AEB6: parse_program (p2-parser.c:499)
+==512728==    by 0x10AF26: parse (p2-parser.c:510)
+==512728==    by 0x10F566: main (main.c:98)
+==512728== 
+==512728== LEAK SUMMARY:
+==512728==    definitely lost: 368 bytes in 5 blocks
+==512728==    indirectly lost: 304 bytes in 1 blocks
+==512728==      possibly lost: 0 bytes in 0 blocks
+==512728==    still reachable: 0 bytes in 0 blocks
+==512728==         suppressed: 0 bytes in 0 blocks
+==512728== 
+==512728== For lists of detected and suppressed errors, rerun with: -s
+==512728== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)

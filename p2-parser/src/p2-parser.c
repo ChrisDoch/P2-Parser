@@ -247,6 +247,7 @@ ASTNode* parse_baseexpr(TokenQueue* input)
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
   ASTNode* base;
+  int curline = get_next_token_line(input);
   Token* t = TokenQueue_peek(input);
   if (token_str_eq(t->text, "(")) { // looks for nexted expression
     base = parse_expr(input);
@@ -370,7 +371,7 @@ ASTNode* parse_stmt(TokenQueue* input)
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
   int curline = get_next_token_line(input);
-  ASTNode* stmt;
+  ASTNode* stmt = NULL;
   Token* token = TokenQueue_peek(input);
   if (token_str_eq((token->next)->text, "=")) { // assignment
     char LOCNAME[MAX_TOKEN_LEN];
@@ -385,7 +386,7 @@ ASTNode* parse_stmt(TokenQueue* input)
     ASTNode* expr = parse_expr(input);
     match_and_discard_next_token(input, SYM, ")");
     ASTNode* body = parse_block(input);
-    ASTNode* body_else;
+    ASTNode* body_else = NULL;
     if (token_str_eq(TokenQueue_peek(input)->text, "else")) { // else condition
       body_else = parse_block(input);
     }
@@ -402,6 +403,7 @@ ASTNode* parse_stmt(TokenQueue* input)
       type = parse_expr(input);
     }
     stmt = ReturnNode_new(type, curline);
+    match_and_discard_next_token(input, KEY, "return");
     match_and_discard_next_token(input, SYM, ";");
   } else if (token_str_eq(token->text, "break")) { // break
     stmt = BreakNode_new(curline);
@@ -485,17 +487,17 @@ ASTNode* parse_funcdecl(TokenQueue* input)
  * node-level parsing functions
  */
 
-ASTNode* parse_program (TokenQueue* input)
+ASTNode* parse_program (TokenQueue* input) // reject invalid programs and func parameters statements are an issue because of loops
 {
     NodeList* vars = NodeList_new();
     NodeList* funcs = NodeList_new();
     
     while (!TokenQueue_is_empty(input)) {
       Token* start = TokenQueue_peek(input);
-      if (strcmp(start->text, "def") == 0) {
-        NodeList_add(funcs, parse_funcdecl(input));
-      } else if (start->type == KEY) {
+      if (strcmp(start->text, "int") == 0 || strcmp(start->text, "bool") == 0 || strcmp(start->text, "void") == 0) {
         NodeList_add(vars, parse_vardecl(input));
+      } else if (strcmp(start->text, "def") == 0) {
+        NodeList_add(funcs, parse_funcdecl(input));
       } else {
         Error_throw_printf("Unexpected input (expected Variable or Function)\n");
       }
