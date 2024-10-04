@@ -243,7 +243,21 @@ ASTNode* parse_baseexpr(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
-
+  ASTNode* base;
+  int curline = get_next_token_line(input);
+  Token* t = TokenQueue_peek(input);
+  if (token_str_eq(t->text, "(")) { // looks for nexted expression
+    base = parse_expr(input);
+  } else if (token_str_eq(t->next->text, "(")) { // checks if not nested expession for funccall
+    base = parse_funccall(input);
+  } else if (t->type == ID) { // checks if not funccall if ID it is a loc
+    base = parse_loc(input);
+  } else if (t->type == DECLIT || t->type == HEXLIT || t->type == STRLIT || token_str_eq(t->text, "true") || token_str_eq(t->text, "false")) {
+    base = parse_lit(input);
+  } else {
+    Error_throw_printf("Unidentifiable base expression\n");
+  }
+  return base;
 }
 
 const UnaryOpType StringToUnaryOp(char* op)
