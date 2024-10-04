@@ -271,6 +271,7 @@ const UnaryOpType StringToUnaryOp(char* op)
   } else {
     Error_throw_printf("Unidentifiable unary operator\n");
   }
+  return NEGOP;
 }
 
 ASTNode* parse_unaryexpr(TokenQueue* input)
@@ -327,6 +328,7 @@ const BinaryOpType StringToBinaryOp(char* op)
   } else {
     Error_throw_printf("Unidentifiable binary operator\n");
   }
+  return OROP;
 }
 
 ASTNode* parse_binexpr(TokenQueue* input)
@@ -448,7 +450,7 @@ ASTNode* parse_block(TokenQueue* input)
 
 ParameterList* parse_param(TokenQueue* input)
 {
-  ParameterList* params;
+  ParameterList* params = ParameterList_new();;
   while (!check_next_token(input, SYM, ")")) {
     DecafType paramt = parse_type(input);
     char NAME[MAX_TOKEN_LEN];
