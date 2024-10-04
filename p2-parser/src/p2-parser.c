@@ -286,14 +286,13 @@ ASTNode* parse_unaryexpr(TokenQueue* input)
   UnaryOpType op;
   bool opisnull = true;
   char *unop[] = {"-", "!"};
-  for (int i = 0; i < sizeof(unop); i++) {
+  for (int i = 0; i < sizeof(unop)/sizeof(unop[0]); i++) {
     if (token_str_eq(unop[i], TokenQueue_peek(input)->text)) {
       op = StringToUnaryOp(unop[i]);
       Token_free(TokenQueue_remove(input));
       opisnull = false;
     }
   }
-  exit(1);
   ASTNode* child = parse_baseexpr(input);
   if (opisnull) {
     return child;
@@ -347,7 +346,7 @@ ASTNode* parse_binexpr(TokenQueue* input)
   ASTNode* left = parse_unaryexpr(input);
   ASTNode* right = NULL;
   char *binop[] = {"||", "&&", "==", "!=", "<", "<=", ">=", ">", "+", "-", "*", "/", "%"};
-  for (int i = 0; i < sizeof(binop); i++) {
+  for (int i = 0; i < sizeof(binop)/sizeof(binop[0]); i++) {
     if (token_str_eq(binop[i], TokenQueue_peek(input)->text)) {
       op = StringToBinaryOp(binop[i]);
       opisnull = false;
