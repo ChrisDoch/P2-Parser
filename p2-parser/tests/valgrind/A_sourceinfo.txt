@@ -1,63 +1,50 @@
-==3413670== Memcheck, a memory error detector
-==3413670== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==3413670== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
-==3413670== Command: ../decaf inputs/add.decaf
-==3413670== 
-Expected ';' but found '4' on line 4
-==3413670== 
-==3413670== HEAP SUMMARY:
-==3413670==     in use at exit: 976 bytes in 7 blocks
-==3413670==   total heap usage: 1,730 allocs, 1,723 frees, 183,680 bytes allocated
-==3413670== 
-==3413670== 24 bytes in 1 blocks are definitely lost in loss record 1 of 7
-==3413670==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3413670==    by 0x10D59F: NodeList_new (ast.c:44)
-==3413670==    by 0x10A7BA: parse_program (p2-parser.c:397)
-==3413670==    by 0x10A8F0: parse (p2-parser.c:416)
-==3413670==    by 0x10EF30: main (main.c:98)
-==3413670== 
-==3413670== 24 bytes in 1 blocks are definitely lost in loss record 2 of 7
-==3413670==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3413670==    by 0x10D59F: NodeList_new (ast.c:44)
-==3413670==    by 0x10A7C3: parse_program (p2-parser.c:398)
-==3413670==    by 0x10A8F0: parse (p2-parser.c:416)
-==3413670==    by 0x10EF30: main (main.c:98)
-==3413670== 
-==3413670== 24 bytes in 1 blocks are definitely lost in loss record 3 of 7
-==3413670==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3413670==    by 0x10D59F: NodeList_new (ast.c:44)
-==3413670==    by 0x10A3E5: parse_block (p2-parser.c:337)
-==3413670==    by 0x10A74E: parse_funcdecl (p2-parser.c:386)
-==3413670==    by 0x10A880: parse_program (p2-parser.c:405)
-==3413670==    by 0x10A8F0: parse (p2-parser.c:416)
-==3413670==    by 0x10EF30: main (main.c:98)
-==3413670== 
-==3413670== 328 (24 direct, 304 indirect) bytes in 1 blocks are definitely lost in loss record 6 of 7
-==3413670==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3413670==    by 0x10D59F: NodeList_new (ast.c:44)
-==3413670==    by 0x10A3DC: parse_block (p2-parser.c:336)
-==3413670==    by 0x10A74E: parse_funcdecl (p2-parser.c:386)
-==3413670==    by 0x10A880: parse_program (p2-parser.c:405)
-==3413670==    by 0x10A8F0: parse (p2-parser.c:416)
-==3413670==    by 0x10EF30: main (main.c:98)
-==3413670== 
-==3413670== 576 (304 direct, 272 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
-==3413670==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3413670==    by 0x10D8D4: ASTNode_new (ast.c:61)
-==3413670==    by 0x10E074: AssignmentNode_new (ast.c:260)
-==3413670==    by 0x109FB5: parse_stmt (p2-parser.c:286)
-==3413670==    by 0x10A4BD: parse_block (p2-parser.c:348)
-==3413670==    by 0x10A74E: parse_funcdecl (p2-parser.c:386)
-==3413670==    by 0x10A880: parse_program (p2-parser.c:405)
-==3413670==    by 0x10A8F0: parse (p2-parser.c:416)
-==3413670==    by 0x10EF30: main (main.c:98)
-==3413670== 
-==3413670== LEAK SUMMARY:
-==3413670==    definitely lost: 400 bytes in 5 blocks
-==3413670==    indirectly lost: 576 bytes in 2 blocks
-==3413670==      possibly lost: 0 bytes in 0 blocks
-==3413670==    still reachable: 0 bytes in 0 blocks
-==3413670==         suppressed: 0 bytes in 0 blocks
-==3413670== 
-==3413670== For lists of detected and suppressed errors, rerun with: -s
-==3413670== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==216367== Memcheck, a memory error detector
+==216367== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==216367== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==216367== Command: ../decaf inputs/add.decaf
+==216367== 
+Expected '}' but found 'a' on line 4
+==216367== 
+==216367== HEAP SUMMARY:
+==216367==     in use at exit: 976 bytes in 7 blocks
+==216367==   total heap usage: 1,730 allocs, 1,723 frees, 183,680 bytes allocated
+==216367== 
+==216367== 24 bytes in 1 blocks are definitely lost in loss record 3 of 7
+==216367==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==216367==    by 0x10CFA8: NodeList_new (ast.c:44)
+==216367==    by 0x10A1C3: parse_program (p2-parser.c:330)
+==216367==    by 0x10A2F9: parse (p2-parser.c:349)
+==216367==    by 0x10E939: main (main.c:98)
+==216367== 
+==216367== 24 bytes in 1 blocks are definitely lost in loss record 4 of 7
+==216367==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==216367==    by 0x10CFA8: NodeList_new (ast.c:44)
+==216367==    by 0x10A1CC: parse_program (p2-parser.c:331)
+==216367==    by 0x10A2F9: parse (p2-parser.c:349)
+==216367==    by 0x10E939: main (main.c:98)
+==216367== 
+==216367== 272 bytes in 1 blocks are definitely lost in loss record 5 of 7
+==216367==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==216367==    by 0x10E3B2: Token_new (token.c:51)
+==216367==    by 0x10EEA3: lex (p1-lexer.c:87)
+==216367==    by 0x10E923: main (main.c:95)
+==216367== 
+==216367== 656 (304 direct, 352 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
+==216367==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==216367==    by 0x10D2DD: ASTNode_new (ast.c:61)
+==216367==    by 0x10DA35: BlockNode_new (ast.c:252)
+==216367==    by 0x109F6E: parse_block (p2-parser.c:290)
+==216367==    by 0x10A157: parse_funcdecl (p2-parser.c:319)
+==216367==    by 0x10A289: parse_program (p2-parser.c:338)
+==216367==    by 0x10A2F9: parse (p2-parser.c:349)
+==216367==    by 0x10E939: main (main.c:98)
+==216367== 
+==216367== LEAK SUMMARY:
+==216367==    definitely lost: 624 bytes in 4 blocks
+==216367==    indirectly lost: 352 bytes in 3 blocks
+==216367==      possibly lost: 0 bytes in 0 blocks
+==216367==    still reachable: 0 bytes in 0 blocks
+==216367==         suppressed: 0 bytes in 0 blocks
+==216367== 
+==216367== For lists of detected and suppressed errors, rerun with: -s
+==216367== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)

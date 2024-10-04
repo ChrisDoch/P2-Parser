@@ -243,6 +243,18 @@ ASTNode* parse_baseexpr(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+
+}
+
+const UnaryOpType StringToUnaryOp(char* op)
+{
+  if (strcmp(op, "-")) {
+    return NEGOP;
+  } else if (strcmp(op, "!")) {
+    return NOTOP;
+  } else {
+    Error_throw_printf("Unidentifiable unary operator\n");
+  }
 }
 
 ASTNode* parse_unaryexpr(TokenQueue* input)
@@ -250,12 +262,71 @@ ASTNode* parse_unaryexpr(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  int curline = get_next_token_line(input);
+  UnaryOpType op;
+  char *unop[] = {"-", "!"};
+  for (int i = 0; i < sizeof(unop); i++) {
+    if (token_str_eq(unop[i], TokenQueue_peek(input)->text)) {
+      op = StringToUnaryOp(unop[i]);
+    }
+  }
+  ASTNode* child = parse_baseexpr(input);
+  return UnaryOpNode_new(op, child, curline);
+}
+
+const BinaryOpType StringToBinaryOp(char* op)
+{
+  if (strcmp(op, "||")) {
+    return OROP;
+  } else if (strcmp(op, "&&")) {
+    return ANDOP;
+  } else if (strcmp(op, "==")) {
+    return EQOP;
+  } else if (strcmp(op, "!=")) {
+    return NEQOP;
+  } else if (strcmp(op, "<")) {
+    return LTOP;
+  } else if (strcmp(op, "<=")) {
+    return LEOP;
+  } else if (strcmp(op, ">=")) {
+    return GEOP;
+  } else if (strcmp(op, ">")) {
+    return GTOP;
+  } else if (strcmp(op, "+")) {
+    return ADDOP;
+  } else if (strcmp(op, "-")) {
+    return SUBOP;
+  } else if (strcmp(op, "*")) {
+    return MULOP;
+  } else if (strcmp(op, "/")) {
+    return DIVOP;
+  } else if (strcmp(op, "%")) {
+    return MODOP;
+  } else {
+    Error_throw_printf("Unidentifiable binary operator\n");
+  }
 }
 
 ASTNode* parse_binexpr(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
+  }
+  int curline = get_next_token_line(input);
+  BinaryOpType op;
+  ASTNode* left = parse_unaryexpr(input);
+  ASTNode* right = NULL;
+  char *binop[] = {"||", "&&", "==", "!=", "<", "<=", ">=", ">", "+", "-", "*", "/", "%"};
+  for (int i = 0; i < sizeof(binop); i++) {
+    if (token_str_eq(binop[i], TokenQueue_peek(input)->text)) {
+      op = StringToBinaryOp(binop[i]);
+      right = parse_unaryexpr(input);
+    }
+  }
+  if (right == NULL) {
+    return left;
+  } else {
+    return BinaryOpNode_new(op, left, right, curline);
   }
 }
 
