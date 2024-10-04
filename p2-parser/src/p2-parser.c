@@ -154,11 +154,13 @@ ASTNode* parse_lit(TokenQueue* input)
   Token* t = TokenQueue_peek(input);
   ASTNode* lit = NULL;
   if (t->type == HEXLIT) { // TODO hex
-
+    int num = (int)strtol(t->text, NULL, 16);
+    lit = LiteralNode_new_int(num, curline);
   } else if (t->type == STRLIT) { // TODO string 
 
   } else if (t->type == DECLIT) { // int
-    lit = LiteralNode_new_int(atoi(t->text), curline);
+    int num = atoi(t->text);
+    lit = LiteralNode_new_int(num, curline);
   } else if (token_str_eq(t->text, "true")) { // true bool
     lit = LiteralNode_new_bool(true, curline);
   } else if (token_str_eq(t->text, "false")) { // false bool
@@ -185,7 +187,7 @@ ASTNode* parse_vardecl(TokenQueue* input)
     isarray = true;
     match_and_discard_next_token (input, SYM, "[");
     while (!check_next_token (input, SYM, "]")) {
-      TokenQueue_remove (input);
+      Token_free(TokenQueue_remove(input));
       arraylen += 1;
     }
     match_and_discard_next_token (input, SYM, "]");
@@ -287,9 +289,11 @@ ASTNode* parse_unaryexpr(TokenQueue* input)
   for (int i = 0; i < sizeof(unop); i++) {
     if (token_str_eq(unop[i], TokenQueue_peek(input)->text)) {
       op = StringToUnaryOp(unop[i]);
+      Token_free(TokenQueue_remove(input));
       opisnull = false;
     }
   }
+  exit(1);
   ASTNode* child = parse_baseexpr(input);
   if (opisnull) {
     return child;
@@ -347,6 +351,7 @@ ASTNode* parse_binexpr(TokenQueue* input)
     if (token_str_eq(binop[i], TokenQueue_peek(input)->text)) {
       op = StringToBinaryOp(binop[i]);
       opisnull = false;
+      Token_free(TokenQueue_remove(input));
       right = parse_unaryexpr(input);
     }
   }
