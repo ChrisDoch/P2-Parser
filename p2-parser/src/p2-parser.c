@@ -192,7 +192,7 @@ ASTNode* parse_vardecl(TokenQueue* input)
   return val;
 }
 
-ASTNode* parse_args(TokenQueue* input)
+NodeList* parse_args(TokenQueue* input)
 {
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
@@ -202,7 +202,7 @@ ASTNode* parse_args(TokenQueue* input)
     return args;
   }
   NodeList_add(args, parse_expr(input));
-  while (token_str_eq(TokenQueue_peek(input), ",")) { // checks for multiple arguments
+  while (token_str_eq(TokenQueue_peek(input)->text, ",")) { // checks for multiple arguments
     match_and_discard_next_token(input, SYM, ",");
     NodeList_add(args, parse_expr(input));
   }
@@ -280,7 +280,7 @@ ASTNode* parse_stmt(TokenQueue* input)
   if (token_str_eq((token->next)->text, "=")) { // assignment
     char LOCNAME[MAX_TOKEN_LEN];
     parse_id(input, LOCNAME);
-    ASTNode* lookup = parse_loc;
+    ASTNode* lookup = parse_loc(input);
     match_and_discard_next_token(input, SYM, "=");
     ASTNode* expr = parse_expr(input);
     stmt = AssignmentNode_new(lookup, expr, curline);
@@ -352,7 +352,7 @@ ASTNode* parse_block(TokenQueue* input)
   return val;
 }
 
-ASTNode* parse_param(TokenQueue* input)
+ParameterList* parse_param(TokenQueue* input)
 {
   ParameterList* params;
   while (!check_next_token(input, SYM, ")")) {
