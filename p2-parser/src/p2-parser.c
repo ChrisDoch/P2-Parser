@@ -166,6 +166,7 @@ ASTNode* parse_lit(TokenQueue* input)
   } else {
     Error_throw_printf("Unexpected literal\n");
   }
+  Token_free(TokenQueue_remove(input));
   return lit;
 }
 
@@ -246,16 +247,16 @@ ASTNode* parse_baseexpr(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
-  ASTNode* base;
+  ASTNode* base = NULL;
   Token* t = TokenQueue_peek(input);
   if (token_str_eq(t->text, "(")) { // looks for nexted expression
     base = parse_expr(input);
   } else if (token_str_eq(t->next->text, "(")) { // checks if not nested expession for funccall
     base = parse_funccall(input);
-  } else if (t->type == ID) { // checks if not funccall if ID it is a loc
-    base = parse_loc(input);
   } else if (t->type == DECLIT || t->type == HEXLIT || t->type == STRLIT || token_str_eq(t->text, "true") || token_str_eq(t->text, "false")) {
     base = parse_lit(input);
+  } else if (t->type == ID) { // checks if not funccall if ID it is a loc
+    base = parse_loc(input);
   } else {
     Error_throw_printf("Unidentifiable base expression\n");
   }
@@ -264,9 +265,9 @@ ASTNode* parse_baseexpr(TokenQueue* input)
 
 const UnaryOpType StringToUnaryOp(char* op)
 {
-  if (strcmp(op, "-")) {
+  if (strcmp(op, "-") == 0) {
     return NEGOP;
-  } else if (strcmp(op, "!")) {
+  } else if (strcmp(op, "!") == 0) {
     return NOTOP;
   } else {
     Error_throw_printf("Unidentifiable unary operator\n");
@@ -301,29 +302,29 @@ const BinaryOpType StringToBinaryOp(char* op)
 {
   if (strcmp(op, "||")) {
     return OROP;
-  } else if (strcmp(op, "&&")) {
+  } else if (strcmp(op, "&&") == 0) {
     return ANDOP;
-  } else if (strcmp(op, "==")) {
+  } else if (strcmp(op, "==") == 0) {
     return EQOP;
-  } else if (strcmp(op, "!=")) {
+  } else if (strcmp(op, "!=") == 0) {
     return NEQOP;
-  } else if (strcmp(op, "<")) {
+  } else if (strcmp(op, "<") == 0) {
     return LTOP;
-  } else if (strcmp(op, "<=")) {
+  } else if (strcmp(op, "<=") == 0) {
     return LEOP;
-  } else if (strcmp(op, ">=")) {
+  } else if (strcmp(op, ">=") == 0) {
     return GEOP;
-  } else if (strcmp(op, ">")) {
+  } else if (strcmp(op, ">") == 0) {
     return GTOP;
-  } else if (strcmp(op, "+")) {
+  } else if (strcmp(op, "+") == 0) {
     return ADDOP;
-  } else if (strcmp(op, "-")) {
+  } else if (strcmp(op, "-") == 0) {
     return SUBOP;
-  } else if (strcmp(op, "*")) {
+  } else if (strcmp(op, "*") == 0) {
     return MULOP;
-  } else if (strcmp(op, "/")) {
+  } else if (strcmp(op, "/") == 0) {
     return DIVOP;
-  } else if (strcmp(op, "%")) {
+  } else if (strcmp(op, "%") == 0) {
     return MODOP;
   } else {
     Error_throw_printf("Unidentifiable binary operator\n");
@@ -374,9 +375,7 @@ ASTNode* parse_stmt(TokenQueue* input)
   int curline = get_next_token_line(input);
   ASTNode* stmt = NULL;
   Token* token = TokenQueue_peek(input);
-  if (token_str_eq((token->next)->text, "=")) { // assignment
-    char LOCNAME[MAX_TOKEN_LEN];
-    parse_id(input, LOCNAME);
+  if (token_str_eq((token->next)->text, "=") || token_str_eq((token->next)->text, "[")) { // assignment or array assignment
     ASTNode* lookup = parse_loc(input);
     match_and_discard_next_token(input, SYM, "=");
     ASTNode* expr = parse_expr(input);
@@ -437,7 +436,7 @@ ASTNode* parse_block(TokenQueue* input)
     match_and_discard_next_token(input, SYM, "}");
     return val;
   }
-  while (check_next_token(input, KEY, "int") || check_next_token(input, KEY, "bool") || check_next_token(input, KEY, "void")) { // NEEDS CHANGING to account for Decaftypes specifically, not keys
+  while (check_next_token(input, KEY, "int") || check_next_token(input, KEY, "bool") || check_next_token(input, KEY, "void")) {
     NodeList_add(vars, parse_vardecl(input)); // checks for variables and adds them to a node list
   }
   while (check_next_token_type(input, KEY) || check_next_token_type(input, ID)) { // checks for lookups and statments

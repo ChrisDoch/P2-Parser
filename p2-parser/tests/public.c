@@ -44,6 +44,7 @@ END_TEST
 TEST_VALID(D_int_var, "int a;")
 TEST_VALID(D_bool_var, "bool b;")
 TEST_VALID(C_void_func, "def void foo() { }")
+TEST_VALID_MAIN(C_custom1, "int a;")
 TEST_VALID_MAIN(C_assign, "int a; a = 5;")
 TEST_VALID_MAIN(C_break, "break;")
 TEST_VALID_MAIN(C_continue, "continue;")
@@ -113,6 +114,7 @@ void public_tests (Suite *s)
     TEST(C_declit);
     TEST(C_hexlit);
     TEST(C_strlit);
+    TEST(C_custom1);
 
     TEST(B_param_func);
     TEST(B_conditional);
