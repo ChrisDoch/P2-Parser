@@ -159,7 +159,7 @@ ASTNode* parse_lit(TokenQueue* input)
   } else if (t->type == STRLIT) { // TODO string 
     char text[MAX_TOKEN_LEN];
     int i = 1;
-    while (i < sizeof(t->text) - 1) {
+    while (i < sizeof(t->text) && (t->text[i]) && (t->text[i] != '"')) {
       text[i - 1] = t->text[i];
       i += 1;
     }
