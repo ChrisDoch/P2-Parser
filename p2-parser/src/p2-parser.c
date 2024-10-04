@@ -215,6 +215,7 @@ ASTNode* parse_funccall(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  int curline = get_next_token_line(input);
   char FUNCNAME[MAX_TOKEN_LEN];
   parse_id(input, FUNCNAME);
   match_and_discard_next_token(input, SYM, "(");
@@ -279,7 +280,7 @@ ASTNode* parse_stmt(TokenQueue* input)
   Token* token = TokenQueue_peek(input);
   if (token_str_eq((token->next)->text, "=")) { // assignment
     char LOCNAME[MAX_TOKEN_LEN];
-    parse_id(input, FUNCNAME);
+    parse_id(input, LOCNAME);
     ASTNode* lookup = parse_loc;
     match_and_discard_next_token(input, SYM, "=");
     ASTNode* expr = parse_expr(input);
