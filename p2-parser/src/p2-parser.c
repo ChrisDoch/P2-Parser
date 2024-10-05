@@ -496,7 +496,7 @@ ASTNode* parse_funcdecl(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
-  ParameterList* params = NULL;
+  ParameterList* params = ParameterList_new();
   int line = get_next_token_line(input);
   discard_next_token(input); // discard def
   DecafType t = parse_type(input); // return type
