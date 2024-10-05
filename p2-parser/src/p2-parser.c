@@ -322,7 +322,7 @@ ASTNode* parse_unaryexpr(TokenQueue* input)
 
 const BinaryOpType StringToBinaryOp(char* op)
 {
-  if (strcmp(op, "||")) {
+  if (strcmp(op, "||") == 0) {
     return OROP;
   } else if (strcmp(op, "&&") == 0) {
     return ANDOP;
@@ -453,11 +453,11 @@ ASTNode* parse_block(TokenQueue* input)
   if (TokenQueue_is_empty(input)) {
     Error_throw_printf("Unexpected end of input (expected identifier)\n");
   }
+  int curline = get_next_token_line(input);
   match_and_discard_next_token(input, SYM, "{");
   NodeList* vars = NodeList_new();
   NodeList* stmts = NodeList_new();
   ASTNode* val = NULL;
-  int line = get_next_token_line(input);
   if (check_next_token(input, SYM, "}")) { // checks for empty block
     match_and_discard_next_token(input, SYM, "}");
     return val;
@@ -468,7 +468,7 @@ ASTNode* parse_block(TokenQueue* input)
   while (check_next_token_type(input, KEY) || check_next_token_type(input, ID)) { // checks for lookups and statments
     NodeList_add(stmts, parse_stmt(input)); // checks for variables and adds them to a node list
   }
-  val = BlockNode_new(vars, stmts, line);
+  val = BlockNode_new(vars, stmts, curline);
   match_and_discard_next_token(input, SYM, "}");
   return val;
 }
