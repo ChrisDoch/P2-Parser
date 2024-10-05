@@ -1,6 +1,9 @@
 /**
  * @file p2-parser.c
  * @brief Compiler phase 2: parser
+ *
+ * Names : Christopher Docherty, Annalise Lang
+ * AI STATEMENT : we did not use AI for any part of this project.
  */
 
 #include "p2-parser.h"
