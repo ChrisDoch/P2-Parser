@@ -46,6 +46,7 @@ TEST_VALID(D_bool_var, "bool b;")
 TEST_VALID(C_void_func, "def void foo() { }")
 TEST_VALID_MAIN(C_custom1, "int a;")
 TEST_VALID_MAIN(C_custom2, "bool a; a = true;")
+TEST_VALID_MAIN(C_custom3, "int a; a = 4 + 5; return a;")
 TEST_VALID_MAIN(C_assign, "int a; a = 5;")
 TEST_VALID_MAIN(C_break, "break;")
 TEST_VALID_MAIN(C_continue, "continue;")
@@ -117,6 +118,7 @@ void public_tests (Suite *s)
     TEST(C_strlit);
     TEST(C_custom1);
     TEST(C_custom2);
+    TEST(C_custom3);
 
     TEST(B_param_func);
     TEST(B_conditional);
