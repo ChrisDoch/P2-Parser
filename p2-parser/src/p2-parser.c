@@ -405,16 +405,19 @@ ASTNode* parse_stmt(TokenQueue* input)
     stmt = AssignmentNode_new(lookup, expr, curline);
     match_and_discard_next_token(input, SYM, ";");
   } else if (token_str_eq(token->text, "if")) { // if condition
+    match_and_discard_next_token(input, KEY, "if");
     match_and_discard_next_token(input, SYM, "(");
     ASTNode* expr = parse_expr(input);
     match_and_discard_next_token(input, SYM, ")");
     ASTNode* body = parse_block(input);
     ASTNode* body_else = NULL;
     if (token_str_eq(TokenQueue_peek(input)->text, "else")) { // else condition
+      match_and_discard_next_token(input, KEY, "else");
       body_else = parse_block(input);
     }
     stmt = ConditionalNode_new(expr, body, body_else, curline);
   } else if (token_str_eq(token->text, "while")) { // while loop
+    match_and_discard_next_token(input, KEY, "while");
     match_and_discard_next_token(input, SYM, "(");
     ASTNode* expr = parse_expr(input);
     match_and_discard_next_token(input, SYM, ")");

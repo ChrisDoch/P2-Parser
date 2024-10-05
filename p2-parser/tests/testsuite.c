@@ -4,6 +4,11 @@ jmp_buf decaf_error;
 
 void Error_throw_printf (const char* format, ...)
 {
+    // va_list args;
+    // va_start(args, format);
+    // vfprintf(stdout, format, args);
+    // va_end(args);
+    // fflush(stdout);
     longjmp(decaf_error, 1);
 }
 
