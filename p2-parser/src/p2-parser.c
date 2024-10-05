@@ -187,7 +187,7 @@ ASTNode* parse_lit(TokenQueue* input)
   } else {
     Error_throw_printf("Unexpected literal\n");
   }
-  Token_free(TokenQueue_remove(input));
+  discard_next_token(input);
   return lit;
 }
 
@@ -206,7 +206,7 @@ ASTNode* parse_vardecl(TokenQueue* input)
     isarray = true;
     match_and_discard_next_token (input, SYM, "[");
     while (!check_next_token (input, SYM, "]")) {
-      Token_free(TokenQueue_remove(input));
+      discard_next_token(input);
       arraylen += 1;
     }
     match_and_discard_next_token (input, SYM, "]");
@@ -308,7 +308,7 @@ ASTNode* parse_unaryexpr(TokenQueue* input)
   for (int i = 0; i < sizeof(unop)/sizeof(unop[0]); i++) {
     if (token_str_eq(unop[i], TokenQueue_peek(input)->text)) {
       op = StringToUnaryOp(unop[i]);
-      Token_free(TokenQueue_remove(input));
+      discard_next_token(input);
       opisnull = false;
     }
   }
@@ -369,7 +369,7 @@ ASTNode* parse_binexpr(TokenQueue* input)
     if (token_str_eq(binop[i], TokenQueue_peek(input)->text)) {
       op = StringToBinaryOp(binop[i]);
       opisnull = false;
-      Token_free(TokenQueue_remove(input));
+      discard_next_token(input);
       right = parse_unaryexpr(input);
     }
   }
@@ -475,8 +475,11 @@ ASTNode* parse_block(TokenQueue* input)
 
 ParameterList* parse_param(TokenQueue* input)
 {
-  ParameterList* params = ParameterList_new();;
+  ParameterList* params = ParameterList_new();
   while (!check_next_token(input, SYM, ")")) {
+    if (!check_next_token(input, KEY, "int") && !check_next_token(input, KEY, "bool") && !check_next_token(input, KEY, "void")) {
+      Error_throw_printf("invalid parameter type\n");
+    }
     DecafType paramt = parse_type(input);
     char NAME[MAX_TOKEN_LEN];
     parse_id(input, NAME);
@@ -540,5 +543,5 @@ ASTNode* parse_program (TokenQueue* input) // reject invalid programs and func p
 
 ASTNode* parse (TokenQueue* input)
 {
-    return parse_program(input);
+  return parse_program(input);
 }
